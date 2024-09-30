@@ -41,7 +41,7 @@ setProduct({
   const renderFormList = formInputsList.map(input => (
     <div className='flex flex-col'>
       <label className='mb-[1px] text-sm font-medium text-gray-700' htmlFor={input.id}>{input.label}</label>
-      <Input type="text" id={input.id} name={input.name} value={''} onChange={onChange} />
+      <Input type="text" id={input.id} name={input.name} value={product[input.name]} onChange={onChange} />
     </div>
   ))
   return (
