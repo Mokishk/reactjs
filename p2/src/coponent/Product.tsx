@@ -1,21 +1,24 @@
 import { IProduct } from "../interfaces"
+import CircleColor from "./CircleColor"
 import Image from "./Image"
 import Button from "./Ui/Button"
 interface Iprops {
     product: IProduct
 }
 const ProductCard = ({ product }: Iprops) => {
+    const renderColor = product.colors.map(color => <CircleColor key={color} color={color} 
+         />)
     return (
+        
         <div className="max-w-sm md:max-w-lg mx-auto md:mx-0 border rounded-md p-2 flex flex-col">
 
             <Image imageUrl={product.imageURL} alt="productName" className="rounded-md" />
             <h3>{product.title}</h3>
             <p className="line-clamp-2">{product.description}</p>
-            <div className="flex items-center my-4 space-x-2">
-                <span className="w-5 h-5 bg-indigo-700 rounded-full cursor-pointer" />
-                <span className="w-5 h-5 bg-green-700 rounded-full cursor-pointer" />
-                <span className="w-5 h-5 bg-red-700 rounded-full cursor-pointer" />
-            </div>
+            <div className="flex items-center my-4 space-x-1 ">
+              {renderColor}
+              </div>
+            
             <div className="flex items-center justify-between">
                 <span>${product.price}</span>
 
