@@ -13,11 +13,12 @@ import { validation } from './coponent/validation'
 import Errormsg from './coponent/Errormsg'
 import CircleColor from './coponent/CircleColor'
 import { v4 as uuid } from "uuid";
-
+import toast, { Toaster } from 'react-hot-toast';
 import { ProductNameTypes } from './types'
 
 
 function App() {
+  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false)
   const [isOpenEditModal, setIsOpenEditModal] = useState(false)
   const [errors, setErorrs] = useState ({ title: "",description: "",imageURL: "", price: ""});
@@ -50,7 +51,13 @@ function App() {
       imageURL: ""
     }
   })
-
+  function openDeleteModal() {
+    setIsOpenDeleteModal(true);
+  }
+  
+  function closeDeleteModal() {
+    setIsOpenDeleteModal(false);
+  }
   function open() {
     setIsOpen(true)
   }
@@ -114,6 +121,16 @@ function App() {
       }
     });
     settempColor([]);
+    close()
+    toast('Product has been added.',
+      {
+        icon: '👏',
+        style:{
+backgroundColor: "black",
+color: 'white',
+        }
+      }
+    );
   };
   const SubmitEditHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -151,6 +168,15 @@ function App() {
     });
   
     closeEditModal();
+    toast('Product has been updated.',
+      {
+        icon: '👏',
+        style:{
+backgroundColor: "black",
+color: 'white',
+        }
+      }
+    );
   };
   
   const oncancel = () => {
@@ -167,6 +193,21 @@ function App() {
     })
     close()
   }
+  const removeProduct = () => {
+    const filtered = products.filter(product => product.id !== productEdit.id);
+    setProducts(filtered);
+    closeDeleteModal(); // إغلاق نافذة الحذف بعد الحذف
+    toast('Product has been deleted.',
+      {
+        icon: '👏',
+        style:{
+backgroundColor: "black",
+color: 'white',
+        }
+      }
+    );
+
+  };
   const renderList = products.map((product, idx) => 
     
           <ProductCard key={product.id} 
@@ -175,6 +216,7 @@ function App() {
           openEditMdal={openEditMdal}
           idx= {idx}
           setproductEditIdx={setproductEditIdx}
+          openDeleteModal={openDeleteModal}
           />
 
     
@@ -220,7 +262,7 @@ const renderColor = colors.map(color => <CircleColor key={color} color={color} o
   return (
     <>
       <main className='container'>
-        <Button className=" bg-indigo-600 hover:bg-indigo-800" onClick={open}>ADD</Button>
+        <Button className=" bg-indigo-600 hover:bg-indigo-800 w-40 h-10 mt-3 ml-16" onClick={open}>ADD</Button>
         <div className='m-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4 p-2 rounded-md'>
           {renderList}
           <Modal isOpen={isOpen} close={close} title='ADD A NEW PRODUCT'>
@@ -271,10 +313,17 @@ const renderColor = colors.map(color => <CircleColor key={color} color={color} o
 
 
           </Modal>
+          <Modal isOpen={isOpenDeleteModal} close={closeDeleteModal} title='Are you sure you want to remove this product from your store?'>
+  <div className='flex items-center space-x-3'>
+    <Button className=" bg-[#c2344d] hover:bg-red-800" onClick={removeProduct}>Yes, Remove</Button>
+    <Button className=" bg-[#f5f5fa] hover:bg-gray-300 "onClick={closeDeleteModal}>Cancel</Button>
+  </div>
+</Modal>
 
 
 
         </div>
+        <Toaster />
       </main>
     </>
   )
